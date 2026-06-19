@@ -1,62 +1,85 @@
-# Data Automation Pipeline
+# newsapi-data-pipeline
 
-**Clean data → Calculate metrics → Excel report + Charts**
+**Stop manually collecting news data for market research.**
 
-This project demonstrates a complete data processing workflow. It reads messy data (CSV/Excel), cleans it, calculates key metrics, and outputs a professional Excel report with auto‑adjusted columns and a visualization chart.
+Tired of dealing with missing fields, duplicate articles, and timezone chaos from raw APIs? This script does one thing and does it well: fetch news data from NewsAPI, clean it, deduplicate, normalize dates, and export to Excel with a chart.
 
-> ✅ **For potential clients:** This is a working demo of my data automation skills. I can adapt this pipeline to your specific needs — whether it's web scraping, data cleaning, recurring reports, or multi‑source data integration.
-
----
-
-## 🔧 What This Demo Shows
-
-- **Read data** from CSV / Excel (or built‑in demo data)
-- **Clean & validate** (remove duplicates, handle missing values, fix data types)
-- **Calculate metrics** (e.g., profit = revenue – cost)
-- **Generate Excel report** with auto‑adjusted column widths (no more `####` in cells)
-- **Create visualization chart** (trend line, bar chart, etc.)
-- **Full logging** + command‑line support
-
-**Tech stack:** Python, Pandas, Matplotlib, OpenPyXL
+> **Note:** This is a **demonstration project** built to showcase my data pipeline workflow (fetch → clean → export). The same **pattern** can be adapted for other data sources — e.g., e‑commerce listings, financial data, social media metrics — but each source requires its own custom integration logic. If you have a specific data source in mind, I can build a tailored solution for your business needs, scoped separately per project.
 
 ---
 
-## 📌 For Web Scraping & Multi‑Site Projects
+## What this demo does
 
-I separate the **scraping** and **processing** stages:
-
-1. **Scraping stage** – I write custom extractors per website / API / state  
-   (supports static pages, dynamic content, JSON APIs, login sessions, pagination)
-2. **Processing stage** – I feed the extracted data into this pipeline → clean Excel + charts
-
-### Multi‑State / Multi‑Site Approach (e.g., FL, GA, NC, SC, TN, AL, LA)
-
-When extracting data from **multiple websites with different structures**, I do:
-
-| Step | What I do |
-|------|-----------|
-| 1 | **Inspect & document** each target site (layout, API, fields) |
-| 2 | **Build a separate extractor** for each site / state |
-| 3 | **Normalize** the data into a unified format |
-| 4 | **Feed into this pipeline** for cleaning + Excel + charts |
-
-Why this works:
-- ✅ **Reliable** – one site changing doesn't break the others  
-- ✅ **Maintainable** – each state can be updated independently  
-- ✅ **Scalable** – new states / sites added without rewriting everything
-
-📩 **Need multi‑state public records or business data?** I can deliver separate scrapers for FL, GA, NC, SC, TN, AL, LA and combine everything into a clean, unified Excel file.
+- Fetches latest news by keyword (default: `"technology"`)
+- Cleans and standardizes messy API responses (missing fields → `N/A`)
+- Removes duplicate articles (by title)
+- Strips timezone info for Excel compatibility (no more `ValueError`)
+- Exports to a clean Excel file with auto-adjusted column widths
+- Generates a bar chart of the top 10 news sources
 
 ---
 
-## 🧪 Quick Start (Run the Demo)
+## Quick start
 
 ```bash
-# Clone & install dependencies
-pip install pandas matplotlib openpyxl
+# 1. Install dependencies
+pip install requests pandas openpyxl matplotlib
 
-# Run with built‑in demo data
-python auto_pipeline.py
+# 2. Set your API key (choose ONE line based on your OS):
+#    Mac/Linux:  export NEWS_API_KEY="your-api-key-here"
+#    Windows (CMD):        set NEWS_API_KEY="your-api-key-here"
+#    Windows (PowerShell): $env:NEWS_API_KEY="your-api-key-here"
 
-# Or run with your own file
-python auto_pipeline.py --input your_data.csv
+# 3. Run it
+python news_crawler.py
+Zero config — just set your NewsAPI key and run. Full source code included.
+
+Example output
+50 articles → 48 clean rows → news_data.xlsx → news_chart.png
+
+Handles real-world API mess:
+
+Missing authors → filled with N/A
+
+Duplicate headlines → removed (first kept)
+
+Timezone‑aware timestamps → stripped for Excel
+
+Empty descriptions → replaced with "No description"
+
+Performance: Processes 50 articles — from raw API to clean Excel — in about 30 seconds. (Network speed may vary.)
+
+Configuration
+Edit these variables at the top of news_crawler.py:
+
+Variable	Default	Description
+QUERY	"technology"	Search keyword (e.g., "business", "AI", "crypto")
+DAYS_BACK	3	Days to look back (max 30 for free tier)
+PAGE_SIZE	50	Articles per request (max 100)
+OUTPUT_EXCEL	"news_data.xlsx"	Output Excel filename
+OUTPUT_CHART	"news_chart.png"	Output chart filename
+Who this is for
+Perfect for: market researchers, small business owners, or anyone who needs daily news briefs without manually browsing 10+ sites.
+
+Tech stack
+Python 3 + requests + pandas + openpyxl + matplotlib — lightweight, dependency‑minimal, and easy to modify.
+
+Scope note
+This is a turnkey solution for public API‑based news data.
+For custom scraping of websites that require:
+
+Captcha solving
+
+Dynamic rendering (JavaScript‑heavy pages)
+
+IP rotation / proxy management
+
+Advanced anti‑detection measures
+
+...that is a separate scope and can be quoted as an additional service. Feel free to contact me for a tailored solution.
+
+Terms
+Full source code included — modify and reuse as needed.
+
+Works out‑of‑the‑box with a valid API key. If it doesn't, I'll help you debug it — free.
+
